@@ -1,6 +1,12 @@
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
 import { cart as myCart, deleteFromCart } from '../data/cart.js'
 import { products } from '../data/products.js';
-import { formatCurrency } from './utils/money.js';
+import formatCurrency from './utils/money.js';
+
+const todays = dayjs();
+const deliveryDay = todays.add(7, 'days');
+
+deliveryDay.format('dddd, MMM D')
 
 let myCartHTML = ''
 
