@@ -1,3 +1,4 @@
+
 import deliveryOptions from "./deliveryOptions.js";
 
 export let cart = JSON.parse(localStorage.getItem('cart'));
@@ -24,15 +25,18 @@ export function addToCart(productId){
   cart.forEach(cartItem => {
     if (productId === cartItem.productId) {
       matchItems = cartItem;
-    }               
+    }
   })
 
+  const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value)
+  
   if (matchItems) {
-        matchItems.quantity += 1;
+    matchItems.quantity += quantity;
+
       } else {
         cart.push({
         productId: productId,
-        quantity: 1,
+        quantity: quantity,
         deliveryOptions: 1,
     })                
   };
