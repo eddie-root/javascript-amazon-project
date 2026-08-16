@@ -46,6 +46,21 @@ export function addToCart(productId){
     saveToStorage();
   }
 
+export function removeFromCart(productId){
+    const newCart = [];
+
+    cart.forEach( cartItem => {
+      if (cartItem.productId !== productId) {
+        newCart.push(cartItem);
+      }
+    })
+
+    cart = newCart;
+
+    getCheckItemsQuantity()
+    saveToStorage();
+  }
+
 export function calculateCartQuantity() {
     let cartQuantity = 0;
     cart.forEach((cartItem) => {
@@ -53,6 +68,19 @@ export function calculateCartQuantity() {
     });
   
     return cartQuantity;
+  }
+
+export function getCheckItemsQuantity(){
+    let cartQuantity = 0;
+
+    cart.forEach(cartItem => {
+      cartQuantity += cartItem.quantity
+    });
+
+    return document.querySelector('.js-return-to-home-link')
+      .innerHTML = `${cartQuantity} items`;
+
+    saveToStorage()
   }
 
 export function updateQuantity(productId, newQuantity) {
@@ -69,28 +97,3 @@ export function updateQuantity(productId, newQuantity) {
     saveToStorage();
   }
 
-export function removeFromCart(productId){
-    const newCart = [];
-
-    cart.forEach( cartItem => {
-      if (cartItem.productId !== productId) {
-        newCart.push(cartItem);
-      }
-    })
-
-    cart = newCart;
-
-    getCheckItemsQuantity()
-    saveToStorage();
-  }
-
-export function getCheckItemsQuantity(){
-    let cartQuantity = 0;
-
-    cart.forEach(cartItem => {
-      cartQuantity += cartItem.quantity
-    });
-
-    return document.querySelector('.js-return-to-home-link')
-      .innerHTML = `${cartQuantity} items`;
-  }

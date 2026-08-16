@@ -1,4 +1,7 @@
-import { cart, addToCart, calculateCartQuantity } from '../data/cart.js'
+import { 
+  addToCart, 
+  calculateCartQuantity 
+} from '../data/cart.js'
 import { products } from '../data/products.js'
 import {formatCurrency} from './utils/money.js';
 
@@ -62,64 +65,22 @@ document.querySelector('.js-product-grid')
   .innerHTML = productHTML;
 
 
-function updateCartQuantity(productId) {
-    let carQuantity = 0;
-    cart.forEach(cartItem => {
-      cartQuantity += cartItem.quantity;
-    })
+function updateCartQuantity() {
+  const cartQuantity = calculateCartQuantity();
 
-    document.querySelector('.js-cart-quantity')
-        .innerHTML = cartQuantity;
-
-    const addedMessage = document.querySelector(
-      `.js-added-to-cart-${productId}`
-    );
-
-    addedMessage.classList.add('add-to-cart-visible');
-
-    setTimeout(() => {
-       addedMessage.classList.remove('add-to-cart-visible'); 
-    }, 1000);
-
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
 }
 
+updateCartQuantity();
 
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
       const {productId} = button.dataset;
 
-      let matchingItem;
-
-      cart.forEach((item) => {
-        if (productId === item.productId) {
-          matchingItem = item;
-        }
-      });
-
-      const quantitySelector = document.querySelector(
-        `.js-quantity-selector-${productId}`
-      );
-
-      const quantity = Number(quantitySelector.value);
-
-      if (matchingItem) {
-        matchingItem.quantity += quantity;
-      } else {
-        cart.push({
-          productId,
-          quantity
-        });
-      }
-
-      let cartQuantity = 0;
-
-      cart.forEach((item) => {
-        cartQuantity += item.quantity;
-      });
-
-      document.querySelector('.js-cart-quantity')
-        .innerHTML = cartQuantity;
+      addToCart(productId);
+      updateCartQuantity();
 
       const addedMessage = document.querySelector(
         `.js-added-to-cart-${productId}`
@@ -129,10 +90,7 @@ document.querySelectorAll('.js-add-to-cart')
 
       setTimeout(() => {
         addedMessage.classList.remove('added-to-cart-visible');
-      }, 2000);      
+      }, 2000);
     });
 })
-
-
-updateCartQuantity();
 
