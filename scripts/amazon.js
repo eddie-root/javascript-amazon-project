@@ -1,4 +1,4 @@
-import { 
+import {
   addToCart, 
   calculateCartQuantity 
 } from '../data/cart.js'
@@ -28,7 +28,7 @@ products.forEach(product=> {
           </div>
 
           <div class="product-price">
-            $ ${(product.priceCents / 100).toFixed(2)}
+            $ ${(formatCurrency(product.priceCents))}
           </div>
 
           <div class="product-quantity-container">
@@ -65,14 +65,26 @@ document.querySelector('.js-product-grid')
   .innerHTML = productHTML;
 
 
-function updateCartQuantity() {
+function updateCartQuantity(productId) {
   const cartQuantity = calculateCartQuantity();
 
   document.querySelector('.js-cart-quantity')
     .innerHTML = cartQuantity;
+
+  // const addedMessage = document.querySelector(
+  //   `.js-added-to-cart-${productId}`
+  // );
+
+  // addedMessage.classList.add('add-to-cart-visible');
+
+  // setTimeout(() => {
+  //    addedMessage.classList.remove('add-to-cart-visible'); 
+  // }, 1000);  
 }
 
 updateCartQuantity();
+
+const addedMessageTimeouts = {};
 
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
@@ -88,9 +100,19 @@ document.querySelectorAll('.js-add-to-cart')
       
       addedMessage.classList.add('added-to-cart-visible');
 
-      setTimeout(() => {
+//    Check if there's a previous timeout for this
+//    product. If there is, we should stop it.
+      const previousTimeoutId = addedMessageTimeouts[productId];
+      if (previousTimeoutId) {
+        clearTimeout(previousTimeoutId);
+      }
+
+      const timeoutId = setTimeout(()=> {
         addedMessage.classList.remove('added-to-cart-visible');
       }, 2000);
+
+      addedMessageTimeouts[productId] = timeoutId;
     });
 })
+
 
