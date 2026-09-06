@@ -13,6 +13,9 @@ import { deliveryOptions } from '../data/deliveryOptions.js';
 const today = dayjs();
 const deliveryDate = today.add(7, 'days');
 
+function renderOrderSummary(){
+
+
 let cartSummaryHTML = '';
 
 cart.forEach((cartItem) => {
@@ -229,3 +232,7 @@ document.querySelectorAll('.js-delivery-option')
       updateDeliveryOption(productId, deliveryOptionId);
     })
   })
+
+}
+
+renderOrderSummary();
