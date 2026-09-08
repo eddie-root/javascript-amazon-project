@@ -12,6 +12,7 @@ import { deliveryOptions } from '../data/deliveryOptions.js';
 
 const today = dayjs();
 const deliveryDate = today.add(7, 'days');
+console.log(today)
 
 function renderOrderSummary(){
 
@@ -230,6 +231,7 @@ document.querySelectorAll('.js-delivery-option')
       const {productId, deliveryOptionId} = element.dataset;
 
       updateDeliveryOption(productId, deliveryOptionId);
+      renderOrderSummary();
     })
   })
 
