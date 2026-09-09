@@ -1,104 +1,53 @@
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
+export const deliveryOptions = [{
+    id: '1',
+    deliveryDays: 7,
+    priceCents: 0
+},{
+    id: '2',
+    deliveryDays: 3,
+    priceCents: 499
+},{
+    id: '3',
+    deliveryDays: 1,
+    priceCents: 999
+}];
 
-export let cart = JSON.parse(localStorage.getItem('cart'))
+export function getDeliveryOption(deliveryOptionId) {
+  let deliveryOption;
 
-if (!cart) {
-  cart = [
-    {
-      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-      quantity: 2,
-      deliveryOptionId: '1'
-    },
-    {
-      productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-      quantity: 1,
-      deliveryOptionId: '2'
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option;
     }
-  ];
-};
-
-function saveToStorage(){
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
-
-export function addToCart(productId){
-  let matchingItem;
-
-  cart.forEach(cartItem => {
-    if (productId === cartItem.productId){
-      matchingItem = cartItem;
-    };
   });
 
-  const selected = document.querySelector(
-    `.js-quantity-selector-${productId}`
-  ).value;
+  return deliveryOption;
+}
 
-  let quantity = Number(selected);
+function isWeekend(date) {
+  const dayOfWeek = date.format('dddd');
+  return dayOfWeek === 'Saturday' || dayOfWeek === 'Sunday';
+}
 
-  if (matchingItem){
-    matchingItem.quantity += quantity;
-  } else {
-    cart.push({
-      productId: productId,
-      quantity: quantity,
-      productId,
-      quantity,
-      deliveryOptionId: '1',
-    })
+export function calculateDeliveryDate(deliveryOption) {
+  let remaingDays = deliveryOption.deliveryDays;
+  let deliveryDate = dayjs();
+
+  while (remaingDays > 0){
+    deliveryDate = deliveryDate.add(1, 'day');
+
+    if(!isWeekend(deliveryDate)){
+      remaingDays --;
+      // This is a shortcut for:
+      // remainingDays = remainingDays -1;
+    }
   }
 
-  saveToStorage();
-}
+  const dateString = deliveryDate.format(
+    'dddd, MMMM D'
+  );
 
-export function removeFromCart(productId){
-  const newCart = [];
-
-  cart.forEach( cartItem => {
-    if (cartItem.productId !== productId) {
-      newCart.push(cartItem);
-    }
-  });
-
-  cart = newCart;
-
-  saveToStorage();
-};
-
-export function calculateCartQuantity(){
-  let cartQuantity = 0;
-
-  cart.forEach( cartItem => {
-    cartQuantity += cartItem.quantity;
-  });
-
-  return cartQuantity;
-}
-
-export function updateQuantity(productId, newQuantity){
-  let matchingItem;
-
-  cart.forEach( cartItem => {
-    if(productId === cartItem.productId){
-      matchingItem = cartItem;
-    }
-  });
-
-  matchingItem.quantity = newQuantity;
-
-  saveToStorage();
-}
-
-export function updateDeliveryOption(productId, deliveryOptionId){
-  let matchingItem;
-
-  cart.forEach(cartItem => {
-    if (productId === cartItem.productId){
-      matchingItem = cartItem;
-    };
-  });
-
-  matchingItem.deliveryOptionId = deliveryOptionId;
-
-  saveToStorage();
+  return dateString;
 }
